@@ -1,60 +1,34 @@
-function findMinimumCostRopes(ropes) {
-  const ropeLengths = ropes.split(',').map(Number);
 
-  let totalCost = 0;
-  while (ropeLengths.length > 1) {
-    const [minIndex1, minIndex2] = findTwoSmallestIndices(ropeLengths);
-
-    
-    const cost = ropeLengths[minIndex1] + ropeLengths[minIndex2];
-
-    
-    totalCost += cost;
-
-    
-    ropeLengths.splice(minIndex1, 1);
-    ropeLengths.splice(minIndex2 - 1, 1, cost);
-  }
-
-  return totalCost;
-}
-
-function findTwoSmallestIndices(arr) {
-  let minIndex1 = 0;
-  let minIndex2 = 1;
-
-  if (arr[minIndex1] > arr[minIndex2]) {
-    minIndex1 = 1;
-    minIndex2 = 0;
-  }
-
-  for (let i = 2; i < arr.length; i++) {
-    if (arr[i] < arr[minIndex1]) {
-      minIndex2 = minIndex1;
-      minIndex1 = i;
-    } else if (arr[i] < arr[minIndex2]) {
-      minIndex2 = i;
+function findMinCost(arr) {
+    if (arr.length === 0) {
+        return 0;
     }
-  }
 
-  return [minIndex1, minIndex2];
+    arr.sort((a, b) => a - b);
+
+    let minCost = 0;
+    let first = arr[0];
+    let second = arr[1];
+
+    for (let i = 2; i < arr.length; i++) {
+        minCost += first + second;
+        first = second;
+        second = arr[i];
+    }
+
+    minCost += first + second;
+
+    return minCost;
 }
 
-
-function handleSubmit() {
-  const inputElement = document.getElementById('input');
-  const resultElement = document.getElementById('result');
-
-  const ropes = inputElement.value;
-
-  const minimumCost = findMinimumCostRopes(ropes);
-  resultElement.innerHTML = `Minimum Cost of Ropes: ${minimumCost}`;
+function main() {
+    const input = document.getElementById("input").value;
+    const arr = input.split(",").map(Number);
+    const result = findMinCost(arr);
+    document.getElementById("result").innerText = result;
 }
 
-
-const form = document.getElementById('ropeForm');
-form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  handleSubmit();
+document.getElementById("form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    main();
 });
-
